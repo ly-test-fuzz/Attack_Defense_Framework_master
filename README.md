@@ -1,0 +1,30 @@
+- Attack_Defense_Framework_master
+ 
+- 有一定编程能力的人使用该系统
+- 目的 ：快速利用 exp 获得 flag , 基础功能是快速利用后门马，完成权限维持并且获取flag
+- 方式 : 
+    - 在主文件中设置 conf_dict , 调用指定的 exp , 并且传参
+    - 在 config.py 中设置常量
+        -  salt_key（重要) ，是后门马的密钥
+        -  wait_time(每轮轮询时间 ，不要设置每轮一次 , 因为有网络问题，可能会漏掉flag)
+        -  shell_timeout 是连接shell的 timeout , 判断shell是否存在 
+- 操作流程
+    - 遍历 conf
+        - 调用 conf 中的 exp 和 参数
+            - exp 函数 导入
+                - 检测是否存在 对应的 exp 文件 和 exp 函数
+                - exp = import(exp_name) 生成一个函数对象
+            - 遍历 Url_list
+                - 对 url 做出解析 , 获得 host 和 port
+                - (None | string) exp(url = url , **conf['arguments'])
+                    - return value is flag or None
+                    - flag
+                        - flag_dict["host|dict"].append(flag)
+                    - None mean error
+    - for flag_key , flag_list in flag_dict.items():
+        - flag_list = list(set(flag_list))
+        - print(flag_key , flag_list)
+        - for flag in flag_list:
+            - bRet = submit_flag(flag , flag_key)
+            - if bRet is True:
+                - print("{}'s flag is {}".format(flag_key ,flag)
